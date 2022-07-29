@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>client/entity-editor/author-section/author-section-merge.js - Documentation</title>
+    <title>client/entity-editor/author-credit-editor/actions.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">client/entity-editor/author-section/author-section-merge.js</h1>
+    <h1 class="page-title">client/entity-editor/author-credit-editor/actions.js</h1>
     
 
     
@@ -41,64 +41,44 @@
         <article>
             <pre class="prettyprint source linenums"><code>"use strict";
 
-require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.object.keys.js");
 
-require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/es.symbol.js");
 
-require("core-js/modules/es.weak-map.js");
+require("core-js/modules/es.array.filter.js");
 
-require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.object.to-string.js");
 
 require("core-js/modules/es.object.get-own-property-descriptor.js");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+require("core-js/modules/web.dom-collections.for-each.js");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+require("core-js/modules/es.object.get-own-property-descriptors.js");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-exports.mapStateToProps = mapStateToProps;
+exports.UPDATE_CREDIT_JOIN_PHRASE_VALUE = exports.UPDATE_CREDIT_DISPLAY_VALUE = exports.UPDATE_CREDIT_AUTHOR_VALUE = exports.UPDATE_AUTHOR_CREDIT = exports.SHOW_AUTHOR_CREDIT_EDITOR = exports.REMOVE_EMPTY_CREDIT_ROWS = exports.REMOVE_AUTHOR_CREDIT_ROW = exports.HIDE_AUTHOR_CREDIT_EDITOR = exports.ADD_AUTHOR_CREDIT_ROW = void 0;
+exports.addAuthorCreditRow = addAuthorCreditRow;
+exports.hideAuthorCreditEditor = hideAuthorCreditEditor;
+exports.removeAuthorCreditRow = removeAuthorCreditRow;
+exports.removeEmptyCreditRows = removeEmptyCreditRows;
+exports.showAuthorCreditEditor = showAuthorCreditEditor;
+exports.updateAuthorCredit = updateAuthorCredit;
+exports.updateCreditAuthorValue = updateCreditAuthorValue;
+exports.updateCreditDisplayValue = updateCreditDisplayValue;
+exports.updateCreditJoinPhraseValue = updateCreditJoinPhraseValue;
 
-require("core-js/modules/es.object.to-string.js");
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-require("core-js/modules/web.dom-collections.for-each.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-require("core-js/modules/es.function.name.js");
-
-require("core-js/modules/es.array.map.js");
-
-require("core-js/modules/es.array.find.js");
-
-var _uniqBy2 = _interopRequireDefault(require("lodash/uniqBy"));
-
-var _find2 = _interopRequireDefault(require("lodash/find"));
-
-var _isNil2 = _interopRequireDefault(require("lodash/isNil"));
-
-var React = _interopRequireWildcard(require("react"));
-
-var _actions = require("./actions");
-
-var _utils = require("../../helpers/utils");
-
-var _entity = require("../../helpers/entity");
-
-var _entitySelect = _interopRequireDefault(require("../common/entity-select"));
-
-var _linkedEntitySelect = _interopRequireDefault(require("../common/linked-entity-select"));
-
-var _mergeField = _interopRequireDefault(require("../common/merge-field"));
-
-var _reactRedux = require("react-redux");
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp; obj &amp;&amp; obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" &amp;&amp; typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache &amp;&amp; cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty &amp;&amp; Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc &amp;&amp; (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _objectSpread(target) { for (var i = 1; i &lt; arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 /*
- * Copyright (C) 2019  Nicolas Pelletier
+ * Copyright (C) 2020  Sean Burke
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,252 +95,167 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp;
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+/* eslint-disable no-console */
+var ADD_AUTHOR_CREDIT_ROW = 'ADD_AUTHOR_CREDIT_ROW';
+exports.ADD_AUTHOR_CREDIT_ROW = ADD_AUTHOR_CREDIT_ROW;
+var REMOVE_AUTHOR_CREDIT_ROW = 'REMOVE_AUTHOR_CREDIT_ROW';
+exports.REMOVE_AUTHOR_CREDIT_ROW = REMOVE_AUTHOR_CREDIT_ROW;
+var UPDATE_CREDIT_AUTHOR_VALUE = 'UPDATE_CREDIT_AUTHOR_VALUE';
+exports.UPDATE_CREDIT_AUTHOR_VALUE = UPDATE_CREDIT_AUTHOR_VALUE;
+var UPDATE_CREDIT_DISPLAY_VALUE = 'UPDATE_CREDIT_DISPLAY_VALUE';
+exports.UPDATE_CREDIT_DISPLAY_VALUE = UPDATE_CREDIT_DISPLAY_VALUE;
+var UPDATE_CREDIT_JOIN_PHRASE_VALUE = 'UPDATE_CREDIT_JOIN_PHRASE_VALUE';
+exports.UPDATE_CREDIT_JOIN_PHRASE_VALUE = UPDATE_CREDIT_JOIN_PHRASE_VALUE;
+var SHOW_AUTHOR_CREDIT_EDITOR = 'SHOW_AUTHOR_CREDIT_EDITOR';
+exports.SHOW_AUTHOR_CREDIT_EDITOR = SHOW_AUTHOR_CREDIT_EDITOR;
+var HIDE_AUTHOR_CREDIT_EDITOR = 'HIDE_AUTHOR_CREDIT_EDITOR';
+exports.HIDE_AUTHOR_CREDIT_EDITOR = HIDE_AUTHOR_CREDIT_EDITOR;
+var REMOVE_EMPTY_CREDIT_ROWS = 'REMOVE_EMPTY_CREDIT_ROWS';
+exports.REMOVE_EMPTY_CREDIT_ROWS = REMOVE_EMPTY_CREDIT_ROWS;
+var UPDATE_AUTHOR_CREDIT = 'UPDATE_AUTHOR_CREDIT';
+exports.UPDATE_AUTHOR_CREDIT = UPDATE_AUTHOR_CREDIT;
+var nextAuthorCreditRowId = 1;
 /**
- * Container component. The AuthorSectionMerge component contains input fields
- * specific to the author entity. The intention is that this component is
- * rendered as a modular section within the entity editor.
+ * Produces an action indicating that a row for an additional name should be
+ * added to the author credit editor. The row is assigned an ID based on an
+ * incrementing variable existing on the client.
  *
- * @param {Object} props - The properties passed to the component.
- * @param {string} props.beginAreaLabel - The label to be used for the begin
- *        area input.
- * @param {string} props.beginDateLabel - The label to be used for the begin
- *        date input.
- * @param {string} props.beginDateValue - The begin date currently set for
- *        this author.
- * @param {string} props.beginAreaValue - The begin area currently set for
- *        this author.
- * @param {string} props.endAreaLabel - The label to be used for the end area
- *        input.
- * @param {string} props.endAreaValue - The end area currently set for this
- *        author.
- * @param {string} props.endDateLabel - The label to be used for the end date
- *        input.
- * @param {string} props.endDateValue - The end date currently set for this
- *        author.
- * @param {boolean} props.endedChecked - Whether or not the ended checkbox
- *        is checked.
- * @param {string} props.endedLabel - The label to be used for the ended
- *        checkbox input.
- * @param {Array} props.mergingEntities - The list of entities being merged
- * @param {number} props.genderValue - The ID of the gender currently selected.
- * @param {number} props.typeValue - The ID of the type currently selected for
- *        the author.
- * @param {Function} props.onBeginAreaChange - A function to be called when
- *        the begin area is changed.
- * @param {Function} props.onBeginDateChange - A function to be called when
- *        the begin date is changed.
- * @param {Function} props.onEndAreaChange - A function to be called when
- *        the end area is changed.
- * @param {Function} props.onEndDateChange - A function to be called when
- *        the end date is changed.
- * @param {Function} props.onEndedChange - A function to be called when
- *        the ended checkbox is toggled.
- * @param {Function} props.onGenderChange - A function to be called when
- *        a different gender is selected.
- * @param {Function} props.onTypeChange - A function to be called when
- *        a different author type is selected.
- * @returns {ReactElement} React element containing the rendered AuthorSectionMerge.
+ * @returns {Action} The resulting ADD_AUTHOR_CREDIT_ROW action.
  */
-function AuthorSectionMerge(_ref) {
-  var beginAreaLabel = _ref.beginAreaLabel,
-      beginDateLabel = _ref.beginDateLabel,
-      beginDateValue = _ref.beginDateValue,
-      beginAreaValue = _ref.beginAreaValue,
-      endAreaLabel = _ref.endAreaLabel,
-      endAreaValue = _ref.endAreaValue,
-      endDateLabel = _ref.endDateLabel,
-      endDateValue = _ref.endDateValue,
-      endedChecked = _ref.endedChecked,
-      endedLabel = _ref.endedLabel,
-      mergingEntities = _ref.mergingEntities,
-      genderValue = _ref.genderValue,
-      typeValue = _ref.typeValue,
-      onBeginAreaChange = _ref.onBeginAreaChange,
-      onBeginDateChange = _ref.onBeginDateChange,
-      onEndAreaChange = _ref.onEndAreaChange,
-      onEndDateChange = _ref.onEndDateChange,
-      onEndedChange = _ref.onEndedChange,
-      onGenderChange = _ref.onGenderChange,
-      onTypeChange = _ref.onTypeChange;
-  var beginAreaOptions = [];
-  var beginDateOptions = [];
-  var endAreaOptions = [];
-  var endDateOptions = [];
-  var endedOptions = [];
-  var genderOptions = [];
-  var typeOptions = [];
-  mergingEntities.forEach(function (entity) {
-    var typeOption = !(0, _isNil2.default)(entity.authorType) &amp;&amp; {
-      label: entity.authorType.label,
-      value: entity.authorType.id
-    };
 
-    if (typeOption &amp;&amp; !(0, _find2.default)(typeOptions, ['value', typeOption.value])) {
-      typeOptions.push(typeOption);
-    }
-
-    var gender = !(0, _isNil2.default)(entity.gender) &amp;&amp; {
-      label: entity.gender.name,
-      value: entity.gender.id
-    };
-
-    if (gender &amp;&amp; !(0, _find2.default)(genderOptions, ['value', gender.value])) {
-      genderOptions.push(gender);
-    }
-
-    var beginDate = !(0, _isNil2.default)(entity.beginDate) &amp;&amp; (0, _entity.transformISODateForSelect)(entity.beginDate);
-
-    if (beginDate &amp;&amp; !(0, _find2.default)(beginDateOptions, ['value', beginDate.value])) {
-      beginDateOptions.push(beginDate);
-    }
-
-    var beginArea = !(0, _isNil2.default)(entity.beginArea) &amp;&amp; {
-      label: entity.beginArea.name,
-      value: (0, _entity.entityToOption)(entity.beginArea)
-    };
-
-    if (beginArea &amp;&amp; !(0, _find2.default)(beginAreaOptions, ['value.id', beginArea.value.id])) {
-      beginAreaOptions.push(beginArea);
-    }
-
-    var ended = !(0, _isNil2.default)(entity.ended) &amp;&amp; {
-      label: entity.ended ? 'Yes' : 'No',
-      value: entity.ended
-    };
-
-    if (ended &amp;&amp; !(0, _find2.default)(endedOptions, ['value', ended.value])) {
-      endedOptions.push(ended);
-    }
-
-    var endDate = !(0, _isNil2.default)(entity.endDate) &amp;&amp; (0, _entity.transformISODateForSelect)(entity.endDate);
-
-    if (endDate &amp;&amp; !(0, _find2.default)(endDateOptions, ['value', endDate.value])) {
-      endDateOptions.push(endDate);
-    }
-
-    var endArea = !(0, _isNil2.default)(entity.endArea) &amp;&amp; {
-      label: entity.endArea.name,
-      value: (0, _entity.entityToOption)(entity.endArea)
-    };
-
-    if (endArea &amp;&amp; !(0, _find2.default)(endAreaOptions, ['value.id', endArea.value.id])) {
-      endAreaOptions.push(endArea);
-    }
-  });
-  var formattedBeginDateValue = (0, _entity.transformISODateForSelect)(beginDateValue);
-  var formattedEndDateValue = (0, _entity.transformISODateForSelect)(endDateValue);
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: typeValue,
-    label: "Type",
-    options: typeOptions,
-    onChange: onTypeChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: genderValue,
-    label: "Gender",
-    options: genderOptions,
-    onChange: onGenderChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: formattedBeginDateValue,
-    label: beginDateLabel,
-    options: beginDateOptions,
-    onChange: onBeginDateChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    components: {
-      Option: _linkedEntitySelect.default,
-      SingleValue: _entitySelect.default
-    },
-    currentValue: beginAreaValue,
-    label: beginAreaLabel,
-    options: beginAreaOptions,
-    onChange: onBeginAreaChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: endedChecked,
-    label: endedLabel,
-    options: endedOptions,
-    onChange: onEndedChange
-  }), endedChecked &amp;&amp; /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: formattedEndDateValue,
-    label: endDateLabel,
-    options: endDateOptions,
-    onChange: onEndDateChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    components: {
-      Option: _linkedEntitySelect.default,
-      SingleValue: _entitySelect.default
-    },
-    currentValue: endAreaValue,
-    label: endAreaLabel,
-    options: endAreaOptions,
-    onChange: onEndAreaChange
-  })));
-}
-
-AuthorSectionMerge.displayName = 'AuthorSectionMerge';
-
-function mapStateToProps(rootState, _ref2) {
-  var mergingEntities = _ref2.mergingEntities;
-  var state = rootState.get('authorSection');
-  var typeValue = state.get('type');
-  var authorTypes = mergingEntities.map(function (entity) {
-    return entity.authorType;
-  });
-  var isGroup = (0, _uniqBy2.default)(authorTypes, 'id').find(function (type) {
-    return type &amp;&amp; type.label === 'Group';
-  });
-
-  var _labelsForAuthor = (0, _utils.labelsForAuthor)(Boolean(isGroup)),
-      beginDateLabel = _labelsForAuthor.beginDateLabel,
-      beginAreaLabel = _labelsForAuthor.beginAreaLabel,
-      endedLabel = _labelsForAuthor.endedLabel,
-      endDateLabel = _labelsForAuthor.endDateLabel,
-      endAreaLabel = _labelsForAuthor.endAreaLabel;
-
+function addAuthorCreditRow() {
+  /*
+   * Prepend 'n' here to indicate a new row, and avoid conflicts with IDs of
+   * existing author credit rows.
+   */
   return {
-    beginAreaLabel: beginAreaLabel,
-    beginAreaValue: (0, _utils.convertMapToObject)(state.get('beginArea')),
-    beginDateLabel: beginDateLabel,
-    beginDateValue: state.get('beginDate'),
-    endAreaLabel: endAreaLabel,
-    endAreaValue: (0, _utils.convertMapToObject)(state.get('endArea')),
-    endDateLabel: endDateLabel,
-    endDateValue: state.get('endDate'),
-    endedChecked: state.get('ended'),
-    endedLabel: endedLabel,
-    genderValue: state.get('gender'),
-    typeValue: typeValue
+    payload: "n".concat(nextAuthorCreditRowId++),
+    type: ADD_AUTHOR_CREDIT_ROW
   };
 }
+/**
+ * Produces an action indicating that the row with the provided ID should be
+ * removed from the author credit editor.
+ *
+ * @param {number} rowId - The ID for the row to be deleted.
+ * @returns {Action} The resulting REMOVE_AUTHOR_CREDIT_ROW action.
+ */
 
-function mapDispatchToProps(dispatch) {
+
+function removeAuthorCreditRow(rowId) {
   return {
-    onBeginAreaChange: function onBeginAreaChange(value) {
-      return dispatch((0, _actions.updateBeginArea)(value));
-    },
-    onBeginDateChange: function onBeginDateChange(dateString) {
-      return dispatch((0, _actions.debouncedUpdateBeginDate)(dateString));
-    },
-    onEndAreaChange: function onEndAreaChange(value) {
-      return dispatch((0, _actions.updateEndArea)(value));
-    },
-    onEndDateChange: function onEndDateChange(dateString) {
-      return dispatch((0, _actions.debouncedUpdateEndDate)(dateString));
-    },
-    onEndedChange: function onEndedChange(value) {
-      return dispatch((0, _actions.updateEnded)(value));
-    },
-    onGenderChange: function onGenderChange(value) {
-      return dispatch((0, _actions.updateGender)(value));
-    },
-    onTypeChange: function onTypeChange(value) {
-      return dispatch((0, _actions.updateType)(value));
-    }
+    payload: rowId,
+    type: REMOVE_AUTHOR_CREDIT_ROW
   };
 }
+/**
+ * Produces an action indicating that the author value for a particular name
+ * within the editor should be updated with the provided value.
+ *
+ * @param {number} rowId - The ID of the row in the author credit editor to update.
+ * @param {Author} newAuthor - The new value to be used for the author value.
+ * @returns {Action} The resulting UPDATE_CREDIT_AUTHOR_VALUE action.
+ */
 
-var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AuthorSectionMerge);
 
-exports.default = _default;
-//# sourceMappingURL=author-section-merge.js.map</code></pre>
+function updateCreditAuthorValue(rowId, newAuthor) {
+  return {
+    payload: _objectSpread({
+      rowId: rowId
+    }, newAuthor),
+    type: UPDATE_CREDIT_AUTHOR_VALUE
+  };
+}
+/**
+ * Produces an action indicating that the display value for a particular name
+ * within the editor should be updated with the provided value.
+ *
+ * @param {number} rowId - The ID of the row in the author credit editor to update.
+ * @param {string} value - The new value to be used for the author display.
+ * @returns {Action} The resulting UPDATE_CREDIT_DISPLAY_VALUE action.
+ */
+
+
+function updateCreditDisplayValue(rowId, value) {
+  return {
+    payload: {
+      rowId: rowId,
+      value: value
+    },
+    type: UPDATE_CREDIT_DISPLAY_VALUE
+  };
+}
+/**
+ * Produces an action indicating that the join phrase value for a particular
+ * name within the editor should be updated with the provided value.
+ *
+ * @param {number} rowId - The ID of the row in the author credit editor to update.
+ * @param {string} value - The new value to be used for the join phrase.
+ * @returns {Action} The resulting UPDATE_CREDIT_JOIN_PHRASE_VALUE action.
+ */
+
+
+function updateCreditJoinPhraseValue(rowId, value) {
+  return {
+    payload: {
+      rowId: rowId,
+      value: value
+    },
+    type: UPDATE_CREDIT_JOIN_PHRASE_VALUE
+  };
+}
+/**
+ * Produces an action indicating that the Author Credit editor popup should be shown
+ *
+ * @returns {Action} The resulting SHOW_AUTHOR_CREDIT_EDITOR action.
+ */
+
+
+function showAuthorCreditEditor() {
+  return {
+    type: SHOW_AUTHOR_CREDIT_EDITOR
+  };
+}
+/**
+ * Produces an action indicating that the Author Credit editor popup should be hidden
+ *
+ * @returns {Action} The resulting HIDE_AUTHOR_CREDIT_EDITOR action.
+ */
+
+
+function hideAuthorCreditEditor() {
+  return {
+    type: HIDE_AUTHOR_CREDIT_EDITOR
+  };
+}
+/**
+ * Produces an action indicating that triggers the removal of empty items in the Author Credit
+ *
+ * @returns {Action} The resulting REMOVE_EMPTY_CREDIT_ROWS action.
+ */
+
+
+function removeEmptyCreditRows() {
+  return {
+    type: REMOVE_EMPTY_CREDIT_ROWS
+  };
+}
+/**
+ * Produces an action indicating an existing Author Credit has been selected.
+ * Used only on the Edition merge page
+ *
+ * @param {number} authorCredit - The selected existing Author Credit
+ * @returns {Action} The resulting UPDATE_AUTHOR_CREDIT action.
+ */
+
+
+function updateAuthorCredit(authorCredit) {
+  return {
+    payload: authorCredit,
+    type: UPDATE_AUTHOR_CREDIT
+  };
+}
+//# sourceMappingURL=actions.js.map</code></pre>
         </article>
     </section>
 

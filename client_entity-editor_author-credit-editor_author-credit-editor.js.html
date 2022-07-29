@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>client/entity-editor/author-section/author-section-merge.js - Documentation</title>
+    <title>client/entity-editor/author-credit-editor/author-credit-editor.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">client/entity-editor/author-section/author-section-merge.js</h1>
+    <h1 class="page-title">client/entity-editor/author-credit-editor/author-credit-editor.js</h1>
     
 
     
@@ -41,64 +41,40 @@
         <article>
             <pre class="prettyprint source linenums"><code>"use strict";
 
-require("core-js/modules/es.array.iterator.js");
-
-require("core-js/modules/es.string.iterator.js");
-
-require("core-js/modules/es.weak-map.js");
-
-require("core-js/modules/web.dom-collections.iterator.js");
-
-require("core-js/modules/es.object.get-own-property-descriptor.js");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
-var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-exports.mapStateToProps = mapStateToProps;
-
-require("core-js/modules/es.object.to-string.js");
-
-require("core-js/modules/web.dom-collections.for-each.js");
-
-require("core-js/modules/es.function.name.js");
 
 require("core-js/modules/es.array.map.js");
 
-require("core-js/modules/es.array.find.js");
+var _keys3 = _interopRequireDefault(require("lodash/keys"));
 
-var _uniqBy2 = _interopRequireDefault(require("lodash/uniqBy"));
+var _reactBootstrap = require("react-bootstrap");
 
-var _find2 = _interopRequireDefault(require("lodash/find"));
+var _authorCreditDisplay = _interopRequireDefault(require("../../components/author-credit-display"));
 
-var _isNil2 = _interopRequireDefault(require("lodash/isNil"));
+var _authorCreditRow = _interopRequireDefault(require("./author-credit-row"));
 
-var React = _interopRequireWildcard(require("react"));
+var _reactFontawesome = require("@fortawesome/react-fontawesome");
+
+var _propTypes = _interopRequireDefault(require("prop-types"));
+
+var _react = _interopRequireDefault(require("react"));
 
 var _actions = require("./actions");
 
-var _utils = require("../../helpers/utils");
-
-var _entity = require("../../helpers/entity");
-
-var _entitySelect = _interopRequireDefault(require("../common/entity-select"));
-
-var _linkedEntitySelect = _interopRequireDefault(require("../common/linked-entity-select"));
-
-var _mergeField = _interopRequireDefault(require("../common/merge-field"));
-
 var _reactRedux = require("react-redux");
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var _utils = require("../../helpers/utils");
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp; obj &amp;&amp; obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" &amp;&amp; typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache &amp;&amp; cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty &amp;&amp; Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" &amp;&amp; Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc &amp;&amp; (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
 
 /*
- * Copyright (C) 2019  Nicolas Pelletier
+ * Copyright (C) 2020  Sean Burke
+ *               2020  Nicolas Pelletier
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,251 +92,80 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop &amp;&amp;
  */
 
 /**
- * Container component. The AuthorSectionMerge component contains input fields
- * specific to the author entity. The intention is that this component is
- * rendered as a modular section within the entity editor.
+ * Container component. The AuthorCreditEditor component contains a number of
+ * AuthorCreditRow elements, and renders these inside a modal, which appears when
+ * the show property of the component is set.
  *
  * @param {Object} props - The properties passed to the component.
- * @param {string} props.beginAreaLabel - The label to be used for the begin
- *        area input.
- * @param {string} props.beginDateLabel - The label to be used for the begin
- *        date input.
- * @param {string} props.beginDateValue - The begin date currently set for
- *        this author.
- * @param {string} props.beginAreaValue - The begin area currently set for
- *        this author.
- * @param {string} props.endAreaLabel - The label to be used for the end area
- *        input.
- * @param {string} props.endAreaValue - The end area currently set for this
- *        author.
- * @param {string} props.endDateLabel - The label to be used for the end date
- *        input.
- * @param {string} props.endDateValue - The end date currently set for this
- *        author.
- * @param {boolean} props.endedChecked - Whether or not the ended checkbox
- *        is checked.
- * @param {string} props.endedLabel - The label to be used for the ended
- *        checkbox input.
- * @param {Array} props.mergingEntities - The list of entities being merged
- * @param {number} props.genderValue - The ID of the gender currently selected.
- * @param {number} props.typeValue - The ID of the type currently selected for
- *        the author.
- * @param {Function} props.onBeginAreaChange - A function to be called when
- *        the begin area is changed.
- * @param {Function} props.onBeginDateChange - A function to be called when
- *        the begin date is changed.
- * @param {Function} props.onEndAreaChange - A function to be called when
- *        the end area is changed.
- * @param {Function} props.onEndDateChange - A function to be called when
- *        the end date is changed.
- * @param {Function} props.onEndedChange - A function to be called when
- *        the ended checkbox is toggled.
- * @param {Function} props.onGenderChange - A function to be called when
- *        a different gender is selected.
- * @param {Function} props.onTypeChange - A function to be called when
- *        a different author type is selected.
- * @returns {ReactElement} React element containing the rendered AuthorSectionMerge.
+ * @param {Object} props.authorCredit - The Author credit object containing rows
+ *        to be rendered in the editor.
+ * @param {Function} props.onAddAuthorCreditRow - A function to be called when the
+ *        button to add an Author is clicked.
+ * @param {Function} props.onClose - A function to be called when the
+ *        modal is closed by a button click or clicking outside the modal.
+ * @param {boolean} props.showEditor - A boolean indicating whether to show the modal or not.
+ * @returns {ReactElement} React element containing the rendered
+ *          AuthorCreditEditor modal.
  */
-function AuthorSectionMerge(_ref) {
-  var beginAreaLabel = _ref.beginAreaLabel,
-      beginDateLabel = _ref.beginDateLabel,
-      beginDateValue = _ref.beginDateValue,
-      beginAreaValue = _ref.beginAreaValue,
-      endAreaLabel = _ref.endAreaLabel,
-      endAreaValue = _ref.endAreaValue,
-      endDateLabel = _ref.endDateLabel,
-      endDateValue = _ref.endDateValue,
-      endedChecked = _ref.endedChecked,
-      endedLabel = _ref.endedLabel,
-      mergingEntities = _ref.mergingEntities,
-      genderValue = _ref.genderValue,
-      typeValue = _ref.typeValue,
-      onBeginAreaChange = _ref.onBeginAreaChange,
-      onBeginDateChange = _ref.onBeginDateChange,
-      onEndAreaChange = _ref.onEndAreaChange,
-      onEndDateChange = _ref.onEndDateChange,
-      onEndedChange = _ref.onEndedChange,
-      onGenderChange = _ref.onGenderChange,
-      onTypeChange = _ref.onTypeChange;
-  var beginAreaOptions = [];
-  var beginDateOptions = [];
-  var endAreaOptions = [];
-  var endDateOptions = [];
-  var endedOptions = [];
-  var genderOptions = [];
-  var typeOptions = [];
-  mergingEntities.forEach(function (entity) {
-    var typeOption = !(0, _isNil2.default)(entity.authorType) &amp;&amp; {
-      label: entity.authorType.label,
-      value: entity.authorType.id
-    };
+var AuthorCreditEditor = function AuthorCreditEditor(_ref) {
+  var authorCredit = _ref.authorCredit,
+      onAddAuthorCreditRow = _ref.onAddAuthorCreditRow,
+      onClose = _ref.onClose,
+      showEditor = _ref.showEditor;
+  return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal, {
+    show: showEditor,
+    size: "lg",
+    onHide: onClose
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Header, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Title, null, "Edit Author credit")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, "Author credits indicate who is the main credited Author (or Authors) for Editions, and how they are credited. They consist of Authors, with (optionally) their names as credited in the specific Edition (i.e. on the cover), and join phrases between them. Keep in mind that join phrases should include spaces before and after if you want any to appear in the final credit."), /*#__PURE__*/_react.default.createElement("hr", null), /*#__PURE__*/_react.default.createElement("dl", null, /*#__PURE__*/_react.default.createElement("dt", null, "Preview of the final Author credit:"), /*#__PURE__*/_react.default.createElement("dd", null, /*#__PURE__*/_react.default.createElement(_authorCreditDisplay.default, {
+    names: authorCredit
+  }))), /*#__PURE__*/_react.default.createElement("hr", {
+    className: "thin"
+  }), /*#__PURE__*/_react.default.createElement("div", null, (0, _keys3.default)(authorCredit).map(function (rowId) {
+    return /*#__PURE__*/_react.default.createElement(_authorCreditRow.default, {
+      index: rowId // eslint-disable-next-line react/no-array-index-key
+      ,
+      key: rowId
+    });
+  }))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Footer, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+    variant: "success",
+    onClick: onAddAuthorCreditRow
+  }, /*#__PURE__*/_react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+    icon: _freeSolidSvgIcons.faPlus
+  }), "\xA0Add another author"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+    variant: "warning",
+    onClick: onClose
+  }, "Close")));
+};
 
-    if (typeOption &amp;&amp; !(0, _find2.default)(typeOptions, ['value', typeOption.value])) {
-      typeOptions.push(typeOption);
-    }
+AuthorCreditEditor.displayName = 'AuthorCreditEditor';
+AuthorCreditEditor.propTypes = {
+  authorCredit: _propTypes.default.object.isRequired,
+  onAddAuthorCreditRow: _propTypes.default.func.isRequired,
+  onClose: _propTypes.default.func.isRequired,
+  showEditor: _propTypes.default.bool
+};
+AuthorCreditEditor.defaultProps = {
+  showEditor: false
+};
 
-    var gender = !(0, _isNil2.default)(entity.gender) &amp;&amp; {
-      label: entity.gender.name,
-      value: entity.gender.id
-    };
-
-    if (gender &amp;&amp; !(0, _find2.default)(genderOptions, ['value', gender.value])) {
-      genderOptions.push(gender);
-    }
-
-    var beginDate = !(0, _isNil2.default)(entity.beginDate) &amp;&amp; (0, _entity.transformISODateForSelect)(entity.beginDate);
-
-    if (beginDate &amp;&amp; !(0, _find2.default)(beginDateOptions, ['value', beginDate.value])) {
-      beginDateOptions.push(beginDate);
-    }
-
-    var beginArea = !(0, _isNil2.default)(entity.beginArea) &amp;&amp; {
-      label: entity.beginArea.name,
-      value: (0, _entity.entityToOption)(entity.beginArea)
-    };
-
-    if (beginArea &amp;&amp; !(0, _find2.default)(beginAreaOptions, ['value.id', beginArea.value.id])) {
-      beginAreaOptions.push(beginArea);
-    }
-
-    var ended = !(0, _isNil2.default)(entity.ended) &amp;&amp; {
-      label: entity.ended ? 'Yes' : 'No',
-      value: entity.ended
-    };
-
-    if (ended &amp;&amp; !(0, _find2.default)(endedOptions, ['value', ended.value])) {
-      endedOptions.push(ended);
-    }
-
-    var endDate = !(0, _isNil2.default)(entity.endDate) &amp;&amp; (0, _entity.transformISODateForSelect)(entity.endDate);
-
-    if (endDate &amp;&amp; !(0, _find2.default)(endDateOptions, ['value', endDate.value])) {
-      endDateOptions.push(endDate);
-    }
-
-    var endArea = !(0, _isNil2.default)(entity.endArea) &amp;&amp; {
-      label: entity.endArea.name,
-      value: (0, _entity.entityToOption)(entity.endArea)
-    };
-
-    if (endArea &amp;&amp; !(0, _find2.default)(endAreaOptions, ['value.id', endArea.value.id])) {
-      endAreaOptions.push(endArea);
-    }
-  });
-  var formattedBeginDateValue = (0, _entity.transformISODateForSelect)(beginDateValue);
-  var formattedEndDateValue = (0, _entity.transformISODateForSelect)(endDateValue);
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: typeValue,
-    label: "Type",
-    options: typeOptions,
-    onChange: onTypeChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: genderValue,
-    label: "Gender",
-    options: genderOptions,
-    onChange: onGenderChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: formattedBeginDateValue,
-    label: beginDateLabel,
-    options: beginDateOptions,
-    onChange: onBeginDateChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    components: {
-      Option: _linkedEntitySelect.default,
-      SingleValue: _entitySelect.default
-    },
-    currentValue: beginAreaValue,
-    label: beginAreaLabel,
-    options: beginAreaOptions,
-    onChange: onBeginAreaChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: endedChecked,
-    label: endedLabel,
-    options: endedOptions,
-    onChange: onEndedChange
-  }), endedChecked &amp;&amp; /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_mergeField.default, {
-    currentValue: formattedEndDateValue,
-    label: endDateLabel,
-    options: endDateOptions,
-    onChange: onEndDateChange
-  }), /*#__PURE__*/React.createElement(_mergeField.default, {
-    components: {
-      Option: _linkedEntitySelect.default,
-      SingleValue: _entitySelect.default
-    },
-    currentValue: endAreaValue,
-    label: endAreaLabel,
-    options: endAreaOptions,
-    onChange: onEndAreaChange
-  })));
-}
-
-AuthorSectionMerge.displayName = 'AuthorSectionMerge';
-
-function mapStateToProps(rootState, _ref2) {
-  var mergingEntities = _ref2.mergingEntities;
-  var state = rootState.get('authorSection');
-  var typeValue = state.get('type');
-  var authorTypes = mergingEntities.map(function (entity) {
-    return entity.authorType;
-  });
-  var isGroup = (0, _uniqBy2.default)(authorTypes, 'id').find(function (type) {
-    return type &amp;&amp; type.label === 'Group';
-  });
-
-  var _labelsForAuthor = (0, _utils.labelsForAuthor)(Boolean(isGroup)),
-      beginDateLabel = _labelsForAuthor.beginDateLabel,
-      beginAreaLabel = _labelsForAuthor.beginAreaLabel,
-      endedLabel = _labelsForAuthor.endedLabel,
-      endDateLabel = _labelsForAuthor.endDateLabel,
-      endAreaLabel = _labelsForAuthor.endAreaLabel;
-
+function mapStateToProps(state) {
   return {
-    beginAreaLabel: beginAreaLabel,
-    beginAreaValue: (0, _utils.convertMapToObject)(state.get('beginArea')),
-    beginDateLabel: beginDateLabel,
-    beginDateValue: state.get('beginDate'),
-    endAreaLabel: endAreaLabel,
-    endAreaValue: (0, _utils.convertMapToObject)(state.get('endArea')),
-    endDateLabel: endDateLabel,
-    endDateValue: state.get('endDate'),
-    endedChecked: state.get('ended'),
-    endedLabel: endedLabel,
-    genderValue: state.get('gender'),
-    typeValue: typeValue
+    authorCredit: (0, _utils.convertMapToObject)(state.get('authorCreditEditor'))
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onBeginAreaChange: function onBeginAreaChange(value) {
-      return dispatch((0, _actions.updateBeginArea)(value));
-    },
-    onBeginDateChange: function onBeginDateChange(dateString) {
-      return dispatch((0, _actions.debouncedUpdateBeginDate)(dateString));
-    },
-    onEndAreaChange: function onEndAreaChange(value) {
-      return dispatch((0, _actions.updateEndArea)(value));
-    },
-    onEndDateChange: function onEndDateChange(dateString) {
-      return dispatch((0, _actions.debouncedUpdateEndDate)(dateString));
-    },
-    onEndedChange: function onEndedChange(value) {
-      return dispatch((0, _actions.updateEnded)(value));
-    },
-    onGenderChange: function onGenderChange(value) {
-      return dispatch((0, _actions.updateGender)(value));
-    },
-    onTypeChange: function onTypeChange(value) {
-      return dispatch((0, _actions.updateType)(value));
+    onAddAuthorCreditRow: function onAddAuthorCreditRow() {
+      return dispatch((0, _actions.addAuthorCreditRow)());
     }
   };
 }
 
-var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AuthorSectionMerge);
+var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AuthorCreditEditor);
 
 exports.default = _default;
-//# sourceMappingURL=author-section-merge.js.map</code></pre>
+//# sourceMappingURL=author-credit-editor.js.map</code></pre>
         </article>
     </section>
 
